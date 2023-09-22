@@ -1,0 +1,17 @@
+## Ansible file for checking which version of Git is installed, and updating it if necesary
+# indentation: 2 spaces
+
+---
+- name: Check Git version
+  hosts: all
+  gather_facts: true
+  tasks:
+
+  - name: Check version of Git on RedHat servers
+    shell: git --version 2>&1
+    register: git_version
+    changed_when: false
+
+  - name: Print Git version
+    debug:
+      msg: "Git version is {{ git_version.stdout }}"

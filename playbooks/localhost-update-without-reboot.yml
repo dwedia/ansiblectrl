@@ -1,0 +1,116 @@
+- hosts: localhost
+  become: true
+  tasks:
+
+#### Apt ####
+    - name: "DEBIAN - Updating cache, installing upgrades, running auotclean and autoremove afterwards"
+      apt:
+        update_cache: 'yes'
+        upgrade: 'yes'
+        autoclean: 'yes'
+        autoremove: 'yes'
+      register: aptout
+      when: ansible_facts['os_family'] == "Debian"
+
+    - name: Output APT
+      debug: msg="{{ aptout.stdout_lines }}"
+      when: aptout.stdout_lines is defined
+
+#### DNF ####
+    - name: "REDHAT - Check packages to upgrade"
+      dnf:
+        list: updates
+      register: packages
+      when: ansible_facts['os_family'] == "RedHat"
+
+    - name: "REDHAT - Show packages to upgrade"
+      debug:
+        msg: >-
+          {%- set output=[] -%}
+          {%- for p in packages.results -%}
+          {{ output.append('%-40s' % (p.name ~ '-' ~ p.version) ~ ' | repo: ' ~ p.repo) }}
+          {%- endfor -%}
+          {{ output }}
+      when: ansible_facts['os_family'] == "RedHat"
+
+    - name: "REDHAT - Upgrade all packages"
+      ansible.builtin.dnf:
+        name: "*"
+        state: latest
+      when: ansible_facts['os_family'] == "RedHat"
+
+    - name: "REDHAT - Autoremove unneeded packages installed as dependencies"
+      ansible.builtin.dnf:
+        autoremove: yes
+      when: ansible_facts['os_family'] == "RedHat"
+
+#### TLDR ####
+    - name: Check for TLDR
+      stat:
+        path: "/usr/bin/tldr"
+      register: tldr_service_status
+
+    - name: Update TLDR cache
+      command: /usr/bin/tldr -u
+      register: tldrout
+      when: tldr_service_status.stat.exists
+
+    - name: Output from TLDR-command
+      debug: msg="{{ tldrout.stdout_lines }}"
+      when: tldrout.stdout_lines is defined
+
+#### ClamAV ####
+    - name: Check for ClamAV
+      stat:
+        path: "/usr/bin/clamscan"
+      register: cl_service_status
+
+    - name: Update clamav
+      command: /usr/bin/freshclam --verbose
+      register: clamout
+      when: cl_service_status.stat.exists
+
+    - name: Output from CLAMAV-command
+      debug: msg="{{ clamout.stdout_lines }}"
+      when: clamout.stdout_lines is defined
+
+#### Snap ####
+    - name: Check for snap
+      stat:
+        path: "/usr/bin/snap"
+      register: sd_service_status
+
+    - name: Update snap packages
+      command: /usr/bin/snap refresh
+      register: snapout
+      when: sd_service_status.stat.exists
+
+    - name: Output from snap-command
+      ansible.builtin.debug:
+        #msg: "{{ snapout.stdout_lines | replace('\u001b[0m\u001b[?25h\u001b[K', 'All snaps up to date.') }}"
+        msg: "{{ snapout.stdout_lines }}"
+      when: snapout.stdout_lines is defined
+
+#### Flatpak ####
+    - name: Check for flatpak
+      stat:
+        path: "/usr/bin/flatpak"
+      register: fp_service_status
+
+    - name: Update flatpak packages
+      command: /usr/bin/flatpak update -y
+      register: flatout
+      when: fp_service_status.stat.exists
+
+    - name: Output from flatpak-command
+      debug: msg="{{ flatout.stdout_lines }}"
+      when: flatout.stdout_lines is defined
+
+
+#### Reboot Needed ? ####
+    - name: Check if a reboot is needed on all servers
+      register: reboot_required_file
+      stat: path=/var/run/reboot-required get_md5=no
+      notify: Localhost needs to reboot
+      ignore_errors: yes
+
