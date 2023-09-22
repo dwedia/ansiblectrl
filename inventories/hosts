@@ -1,21 +1,30 @@
-[pihole]
-pizerow
-piholeonfafnir
+---
 
-[ansible]
-ansiblemaster
-# testansible # currently turned off
+pihole:
+  hosts:
+    pizerow:
+      ansible_host: 10.0.0.4
+    piholeonfafnir:
+      ansible_host: 10.0.0.8
 
-[raspotify]
-# barry # currently turned off
+ansible:
+  hosts:
+    wizardstower:
+      ansible_host: 10.0.0.70
 
-[containerhosts]
-vpsdockerhost
-# dockerlxc # turned off, while testing migration to podman
-podmanhost
+containerhosts:
+  hosts:
+    vpsdockerhost:
+      ansible_host: 130.61.201.131
+    podmanhost:
+      ansible_host: 10.0.0.60
 
-[tailscaleservers]
-tailscalevpn
+tailscaleservers:
+  hosts:
+    tailscalevpn:
+      ansible_host: 10.0.0.99
 
-[draconiaServers]
-ravenOracleVps
+draconiaservers:
+  hosts:
+    ravenOracleVps:
+      ansible_host: 132.226.197.40
