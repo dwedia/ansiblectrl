@@ -1,2 +1,2 @@
 ansible.cfg
-**/inventories
+**/inventories/hosts
