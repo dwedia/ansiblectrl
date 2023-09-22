@@ -1,0 +1,21 @@
+[pihole]
+pizerow
+piholeonfafnir
+
+[ansible]
+ansiblemaster
+# testansible # currently turned off
+
+[raspotify]
+# barry # currently turned off
+
+[containerhosts]
+vpsdockerhost
+# dockerlxc # turned off, while testing migration to podman
+podmanhost
+
+[tailscaleservers]
+tailscalevpn
+
+[draconiaServers]
+ravenOracleVps
