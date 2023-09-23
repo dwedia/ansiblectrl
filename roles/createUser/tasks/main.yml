@@ -1,5 +1,5 @@
 ---
-- name: Create user
+- name: Prompts for the Create user role
   vars_prompt:
     - name: user_name
       prompt: "Enter the user name:"
@@ -8,20 +8,21 @@
       prompt: "Enter the user password:"
       private: yes
 
+- name: Create user role
   ansible.builtin.user:
     name: "{{ user_name }}"
     state: present
     password: "{{ user_password | password_hash('sha512') }}"
     create_home: true
 
-  file:
+  ansible.builtin.file:
     path: /etc/sudoers.d/{{ user_name }}
     state: touch
     owner: root
     group: root
     mode: 0440
 
-  lineinfile:
+  ansible.builtin.lineinfile:
     dest: /etc/sudoers.d/{{ user_name }}
     state: present
     line: '{{ user_name }} ALL=(ALL) NOPASSWD:ALL'
