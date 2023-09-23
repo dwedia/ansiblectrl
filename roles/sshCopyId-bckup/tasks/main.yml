@@ -1,0 +1,18 @@
+# requires ansible posix collection
+# to install: ansible-galaxy collection install ansible.posix
+
+---
+- name: Copy ssh key
+  vars_prompt:
+    localUser:
+      prompt: Enter the username of the local user, that holds the key file
+      private: no
+    keyFileName:
+      prompt: Enter the name of the public key file
+      private: no
+    
+
+  ansible.posix.authorized_key:
+    user: ansibleuser
+    state: present
+    key: "{{ lookup('file'), '/home/"{{ localUser }}"/.ssh/"{{ keyFileName }}".pub' }}"

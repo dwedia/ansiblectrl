@@ -3,16 +3,10 @@
 
 ---
 - name: Copy ssh key
-  vars_prompt:
-    localUser:
-      prompt: Enter the username of the local user, that holds the key file
-      private: no
-    keyFileName:
-      prompt: Enter the name of the public key file
-      private: no
-    
-
-  ansible.posix.authorized_key:
-    user: ansibleuser
+  ansible.builtin.lineinfile:
+    path: "/home/ansibleuser/.ssh/authorized_keys"
+    line: "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIDQlp2lxJZoL/0aTI4Zii6Osab+W72vqh1pDa9Coarta ansiblewizard@wizardstower"
     state: present
-    key: "{{ lookup('file'), '/home/"{{ localUser }}"/.ssh/"{{ keyFileName }}".pub' }}"
+    owner: ansibleuser
+    group: ansibleuser
+    mode: '0600'
