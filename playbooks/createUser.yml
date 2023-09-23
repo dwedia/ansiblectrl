@@ -1,0 +1,6 @@
+---
+- name: Create user playbook
+  hosts: all
+  become: true
+  roles:
+    - createUser

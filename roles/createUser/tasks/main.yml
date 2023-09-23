@@ -1,0 +1,27 @@
+---
+- name: Create user
+  vars_prompt:
+    - name: user_name
+      prompt: "Enter the user name:"
+      private: no
+    - name: user_password
+      prompt: "Enter the user password:"
+      private: yes
+
+  ansible.builtin.user:
+    name: "{{ user_name }}"
+    state: present
+    password: "{{ user_password | password_hash('sha512') }}"
+    create_home: true
+
+  file:
+    path: /etc/sudoers.d/{{ user_name }}
+    state: touch
+    owner: root
+    group: root
+    mode: 0440
+
+  lineinfile:
+    dest: /etc/sudoers.d/{{ user_name }}
+    state: present
+    line: '{{ user_name }} ALL=(ALL) NOPASSWD:ALL'
