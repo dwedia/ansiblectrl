@@ -14,19 +14,19 @@
   tasks:
   - name: create .ssh folder, if it does not exist
     ansible.builtin.file:
-      path: /home/{{ targetUser }}/.ssh
+      path: "/home/{{ targetUser }}/.ssh"
       state: directory
-      owner: {{ targetUser }}
-      group: {{ targetUser }}
+      owner: "{{ targetUser }}"
+      group: "{{ targetUser }}"
       mode: '0700'
 
   - name: Copy ssh key
     ansible.builtin.lineinfile:
-      path: /home/{{ targetUser }}/.ssh/authorized_keys
+      path: "/home/{{ targetUser }}/.ssh/authorized_keys"
       line: "{{ sshKeyInput }}"
       state: present
-      owner: {{ targetUser }}
-      group: {{ targetUser }}
+      owner: "{{ targetUser }}"
+      group: "{{ targetUser }}"
       mode: '0600'
       backup: true
       create: true
