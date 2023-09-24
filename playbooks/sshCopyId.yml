@@ -7,26 +7,26 @@
     targetUser:
       prompt: "Enter the username of the target user: "
       private: false
-    sskKeyInput:
+    sshKeyInput:
       prompt: "Enter the contents of the .pub file you want to copy over: "
       private: false
 
   tasks:
   - name: create .ssh folder, if it does not exist
     ansible.builtin.file:
-      path: /home/ansibleuser/.ssh
+      path: /home/{{ targetUser }}/.ssh
       state: directory
-      owner: ansibleuser
-      group: ansibleuser
+      owner: {{ targetUser }}
+      group: {{ targetUser }}
       mode: '0700'
 
   - name: Copy ssh key
     ansible.builtin.lineinfile:
-      path: /home/ansibleuser/.ssh/authorized_keys
-      line: "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIDQlp2lxJZoL/0aTI4Zii6Osab+W72vqh1pDa9Coarta ansiblewizard@wizardstower"
+      path: /home/{{ targetUser }}/.ssh/authorized_keys
+      line: "{{ sshKeyInput }}"
       state: present
-      owner: ansibleuser
-      group: ansibleuser
+      owner: {{ targetUser }}
+      group: {{ targetUser }}
       mode: '0600'
       backup: true
       create: true
