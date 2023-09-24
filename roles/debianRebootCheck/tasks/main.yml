@@ -9,7 +9,7 @@
 - name: "[DEBIAN] Reboot Required"
   debug:
     msg: "Reboot is Required on {{ ansible_hostname }}"
-  when: debianRebootRequired.stat.exists == false
+  when: debianRebootRequired.stat.exists == true
 
 - name: "Output variable"
   ansible.builtin.debug:
