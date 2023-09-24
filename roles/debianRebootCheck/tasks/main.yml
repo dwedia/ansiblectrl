@@ -14,4 +14,4 @@
 - name: "Output variable"
   ansible.builtin.debug:
     msg: "{{ debianRebootRequired }}"
-  #when: debianRebootRequired.stat.exists == False
+  when: debianRebootRequired.stat.exists == true
