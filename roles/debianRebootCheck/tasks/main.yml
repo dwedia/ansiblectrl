@@ -9,4 +9,4 @@
 - name: "[DEBIAN] Reboot Required"
   debug:
     msg: "Reboot is Required on {{ ansible_hostname }}"
-  when: debianRebootRequired is defined
+  when: "debianRebootRequired.stdout.find('No such file or directory') == -1"
