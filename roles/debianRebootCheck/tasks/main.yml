@@ -6,7 +6,11 @@
   register: debianRebootRequired
   when: ansible_facts['os_family'] == "Debian"
 
-- name: "[DEBIAN] Reboot Required"
-  debug:
-    msg: "Reboot is Required on {{ ansible_hostname }}"
-  when: "debianRebootRequired.stdout.find('No such file or directory') == -1"
+#- name: "[DEBIAN] Reboot Required"
+#  debug:
+#    msg: "Reboot is Required on {{ ansible_hostname }}"
+#  when: debianRebootRequired.stdout.find('No such file or directory') == -1
+
+- name: "Output variable"
+  ansible.builtin.debug:
+    msg: "{{ debianRebootRequired }}"
