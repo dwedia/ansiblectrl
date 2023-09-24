@@ -2,7 +2,7 @@
 ---
 - name: "[DEBIAN] Check if reboot is needed"
   stat:
-    path: /var/run/reboot-required
+    path: /etc/fstab
   register: debianRebootRequired
   when: ansible_facts['os_family'] == "Debian"
 
