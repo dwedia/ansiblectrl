@@ -1,5 +1,4 @@
 ---
-
 - name: Create user playbook
   hosts: all
   become: true
@@ -12,7 +11,7 @@
     private: yes
 
   tasks:
-  - name: Create user 
+  - name: Create user
     ansible.builtin.user:
       name: "{{ user_name }}"
       state: present
