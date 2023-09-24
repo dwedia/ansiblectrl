@@ -1,7 +1,7 @@
 ## Ansible file for upgrading all packages
 # indentation: 2 spaces
 ---
-- name: playbook to update all packages on servers
+- name: Playbook to update all packages on servers
   hosts: all
   become: true
   roles:
