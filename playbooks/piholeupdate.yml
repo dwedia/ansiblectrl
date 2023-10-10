@@ -8,7 +8,7 @@
 
   tasks:
     - name: Update pihole
-      ansible.builtin.shell:
+      ansible.builtin.command:
         cmd: pihole -up
       register: piUpdate
       changed_when: false
