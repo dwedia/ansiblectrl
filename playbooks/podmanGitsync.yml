@@ -6,4 +6,4 @@
   - name: Sync podman-files
     ansible.builtin.git:
       repo: https://github.com/dwedia/podman-files.git
-      dest: /opt/repos/
+      dest: /opt/repos/podman-files
