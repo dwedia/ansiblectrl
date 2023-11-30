@@ -1,6 +1,6 @@
 ---
 - name: Sync podman related git repostitories
-  hosts: 10.0.0.60
+  hosts: podmanhost.dragonflight.dk
 
   tasks:
   - name: Sync podman-files
