@@ -1,0 +1,10 @@
+---
+- name: Sync podman related git repostitories
+  hosts: podmanhost
+
+  tasks:
+  - name: Sync podman-files
+    ansible.builtin.git:
+      repo: https://github.com/dwedia/podman-files.git
+      dest: /home/ramiraz/podman-files
+      
