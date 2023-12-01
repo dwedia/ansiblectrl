@@ -7,4 +7,4 @@
     ansible.builtin.git:
       repo: https://github.com/dwedia/podman-files.git
       dest: /opt/repos/podman-files
-    sudo_user: ramiraz
+      sudo_user: ramiraz
