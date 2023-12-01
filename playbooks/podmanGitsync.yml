@@ -1,7 +1,7 @@
 ---
 - name: Sync podman related git repostitories
   hosts: podmanhost.dragonflight.dk
-  remote_user: ramiraz
+  sudo_user: ramiraz
 
   tasks:
   - name: Sync podman-files
