@@ -2,6 +2,7 @@
 - name: Create user playbook
   hosts: all
   become: true
+  remote_user: root
   vars_prompt:
   - name: user_name
     prompt: "Enter the user name:"
