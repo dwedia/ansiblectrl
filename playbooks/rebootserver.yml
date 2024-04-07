@@ -13,10 +13,10 @@
 #    ansible_become_pass: "{{ sudo_password }}"
 
   tasks:
-    - name: Wait for user confirmation
-      ansible.builtin.pause:
-        seconds: 60
-        prompt: "Press ctrl+c to continue or wait 60 seconds - DID YOU REMEMBER TO USE LIMIT?"
+    #- name: Wait for user confirmation
+    #  ansible.builtin.pause:
+    #    seconds: 10
+    #    prompt: "Press ctrl+c to continue or wait 10 seconds - DID YOU REMEMBER TO USE LIMIT?"
 
     - name: Reboot Debian based servers
       ansible.builtin.reboot:
