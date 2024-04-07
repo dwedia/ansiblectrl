@@ -4,7 +4,7 @@
 - name: Update Pihole on pihole servers
   become: false
   #remote_user: ramiraz
-  hosts: pihole
+  hosts: "{{ hostVar | default('pihole') }}"
 
   tasks:
     - name: Update pihole

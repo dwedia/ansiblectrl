@@ -2,7 +2,7 @@
 # indentation: 2 spaces
 ---
 - name: Playbook to update all packages on servers
-  hosts: all
+  hosts: "{{ hostVar | default('all') }}"
   become: true
   roles:
     - role: aptUpdate
