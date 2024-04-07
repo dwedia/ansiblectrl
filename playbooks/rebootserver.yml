@@ -3,7 +3,7 @@
 
 ---
 - name: Reboot server ONLY USE WITH LIMIT
-  hosts: all
+  hosts: "{{ hostVar | default('all') }}"
   become: true
 
 #  vars_files:
