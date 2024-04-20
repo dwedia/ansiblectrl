@@ -9,6 +9,12 @@
       ansible.builtin.git:
         repo: git@github.com:dwedia/DraconiaWeb.git
         dest: /home/raven/DraconiaWeb/
+      register: draconiaGitOut
+
+    - name: Show git output
+      ansible.builtin.debug:
+        msg: "{{ draconiaGitOut.stdout_lines }}"
+      when: draconiaGitOut is defined
 
     - name: Restart Apache Container
       ansible.builtin.shell: cd /home/raven/apache && docker compose down && sleep 2 && docker compose pull && docker compose up -d
