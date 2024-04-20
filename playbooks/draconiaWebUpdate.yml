@@ -13,7 +13,7 @@
 
     - name: Show git output
       ansible.builtin.debug:
-        msg: "{{ draconiaGitOut.stdout_lines }}"
+        msg: "{{ draconiaGitOut.stdout }}"
       when: draconiaGitOut is defined
 
     - name: Restart Apache Container
