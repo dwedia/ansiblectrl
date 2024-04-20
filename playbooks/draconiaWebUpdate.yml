@@ -2,7 +2,7 @@
 - name: Update draconia.dk
   hosts: ravenOracleVps.draconia.dk
   become: false
-  remote_user: raven  
+  remote_user: raven
   tasks:
 
     - name: Pull git repository
