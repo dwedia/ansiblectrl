@@ -13,10 +13,6 @@
     - name: lvName
       prompt: "Desired Logical Volume name: "
       private: no
-
-    - name: dirPath
-      prompt: "full path to folder for mounting: "
-      private: no
   
   roles:
     - storage/lvmExpandMount
