@@ -9,5 +9,5 @@
 - name: "[DEBIAN] Reboot Required"
   debug:
     #var: debianRebootRequired.stat.exists
-    msg: "Reboot is Required on {{ ansible_hostname }}"
+    msg: "Reboot is Required on {{ ansible_fqdn }}"
   when: debianRebootRequired.stat.exists
