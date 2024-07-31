@@ -12,6 +12,6 @@
 
 - name: Output from snap-command
   ansible.builtin.debug:
-    msg: "{{ snapout.stdout_lines | replace('\u001b[0m\u001b[?25h\u001b[K', 'All snaps up to date.') }}"
+    msg: "{{ snapout.stdout_lines | replace('\e[0m\e[?25h\e[K', 'All snaps up to date.') }}"
     #msg: "{{ snapout.stdout_lines }}"
   when: snapout.stdout_lines is defined
