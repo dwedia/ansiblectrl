@@ -1,6 +1,6 @@
 ---
 - name: Create user playbook
-  hosts: all
+  hosts: "{{ hostVar | default('all') }}"
   become: true
   remote_user: root
   vars_prompt:

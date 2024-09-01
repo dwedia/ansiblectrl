@@ -1,6 +1,6 @@
 ---
 - name: Create user playbook
-  hosts: "{{ hostVar }}"
+  hosts: "{{ hostVar | default('all') }}"
   become: true
   remote_user: root
   vars_prompt:
@@ -22,6 +22,9 @@
       password: "{{ user_password | password_hash('sha512') }}"
       create_home: true
 
+  - name: Sudo access fact
+    ansible.builtin.set_fact: "{{ user_sudo_choice | default('N') }}"
+
   - name: create sudoers.d file for user
     ansible.builtin.file:
       path: /etc/sudoers.d/{{ user_name }}
@@ -29,9 +32,11 @@
       owner: root
       group: root
       mode: 0440
+    when: user_sudo_choice == "y" or user_sudo_choice == "Y"
 
   - name: edit sudoers file for user
     ansible.builtin.lineinfile:
       dest: /etc/sudoers.d/{{ user_name }}
       state: present
       line: '{{ user_name }} ALL=(ALL) ALL'
+    when: user_sudo_choice == "y" or user_sudo_choice == "Y"
