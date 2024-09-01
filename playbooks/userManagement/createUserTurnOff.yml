@@ -13,6 +13,7 @@
       name: turnOffUser
       state: present
       password: "{{ user_password | password_hash('sha512') }}"
+      shell: /bin/bash
       create_home: true
 
   - name: Create .ssh dir
