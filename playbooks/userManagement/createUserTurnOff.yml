@@ -2,7 +2,6 @@
 - name: Create user playbook
   hosts: "{{ hostVar }}"
   become: true
-  remote_user: root
   vars_prompt:
   - name: user_password
     prompt: "Enter the user password:"
