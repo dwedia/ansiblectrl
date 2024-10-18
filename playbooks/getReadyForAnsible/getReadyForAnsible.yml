@@ -49,3 +49,18 @@
         group: "{{ user_name }}"
         mode: '0600'
         backup: yes
+
+    - name: close down root ssh login
+      ansible.builtin.lineinfile:
+        dest: /etc/ssh/sshd_config
+        regexp: "{{ item.regex }}"
+        line: "{{ item.line }}"
+      with_items:
+        - regex: ^#PermitRootLogin prohibit-password
+          line: PermitRootLogin no
+        - regex: ^#PubkeyAuthentication yes
+          line: PubkeyAuthentication yes
+        - regex: ^#PasswordAuthentication yes
+          line: PasswordAuthentication no
+        - regex: ^#PermitEmptyPasswords no
+          line: PermitEmptyPasswords no
