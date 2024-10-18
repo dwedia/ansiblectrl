@@ -9,7 +9,7 @@ To make this easier, when making servers, especially shortlived test servers, I 
 To use this playbook, root ssh access with password needs to be enabled for the run. The last task of the playbook disables root ssh login.  
 NOTE: It also disables password based login altogether.
 
-
+### Playbook output
 
 ```bash
 $ ansible-playbook -i <target IP>, playbooks/getReadyForAnsible/getReadyForAnsible.yml -k
@@ -48,7 +48,12 @@ changed: [<target IP>]
 
 PLAY RECAP ************************************************************************************************************************************************
 <target IP>                 : ok=8    changed=5    unreachable=0    failed=0    skipped=0    rescued=0    ignored=0   
+```
 
+### Test that it works
+
+Once we have run the above playbook, we can use an adhoc ansible command to test that its working as intended.
+```bash
 [ansiblewizard@wizardstower ansiblectrl]$ ansible all -i <target IP>, -m ping
 
 PLAY [Ansible Ad-Hoc] *************************************************************************************************************************************
