@@ -60,7 +60,7 @@
           line: PermitRootLogin no
         - regex: ^#PubkeyAuthentication yes
           line: PubkeyAuthentication yes
-        - regex: ^#PasswordAuthentication yes
+        - regex: ^#PasswordAuthentication
           line: PasswordAuthentication no
         - regex: ^#PermitEmptyPasswords no
           line: PermitEmptyPasswords no
