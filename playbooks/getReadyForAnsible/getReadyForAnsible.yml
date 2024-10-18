@@ -1,6 +1,6 @@
 ---
 - name: get target ready for ansible
-  hosts:
+  hosts: all
   remote_user: root
   vars_prompt:
     - name: user_name
