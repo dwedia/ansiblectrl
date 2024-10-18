@@ -64,3 +64,12 @@
           line: PasswordAuthentication no
         - regex: ^#PermitEmptyPasswords no
           line: PermitEmptyPasswords no
+      notify:
+        - restart sshd after editing sshd_config
+
+  handlers:
+    - name: restart sshd after editing sshd_config
+      ansible.builtin.systemd_service:
+        name: sshd
+        daemon_reload: true
+        state: restarted
