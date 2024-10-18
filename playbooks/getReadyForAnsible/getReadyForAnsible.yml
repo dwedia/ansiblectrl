@@ -56,7 +56,7 @@
         regexp: "{{ item.regex }}"
         line: "{{ item.line }}"
       with_items:
-        - regex: ^#PermitRootLogin prohibit-password
+        - regex: ^#PermitRootLogin
           line: PermitRootLogin no
         - regex: ^#PubkeyAuthentication yes
           line: PubkeyAuthentication yes
