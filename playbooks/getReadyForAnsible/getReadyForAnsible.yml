@@ -58,7 +58,7 @@
       with_items:
         - regex: ^#PermitRootLogin
           line: PermitRootLogin no
-        - regex: ^#PubkeyAuthentication yes
+        - regex: ^#PubkeyAuthentication
           line: PubkeyAuthentication yes
         - regex: ^#PasswordAuthentication
           line: PasswordAuthentication no
