@@ -1,7 +1,8 @@
 --
 - name: get target ready for ansible
   hosts: all
-  remote_user: root
+  become: true
+
   vars_prompt:
     - name: user_name
       prompt: "Enter the user name:"
