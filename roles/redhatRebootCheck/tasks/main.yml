@@ -19,5 +19,5 @@
   when: 
     # - redHatNeedsRestartingStatus.rc != 0 and "Reboot is required" in redHatNeedsRestartingStatus.stdout
     - redHatNeedsRestartingStatus.rc != 0 
-    - "Reboot is required" in redHatNeedsRestartingStatus.stdout
+    #- "Reboot is required" in redHatNeedsRestartingStatus.stdout
     - redHatNeedsRestartingInstalled.stat.exists
