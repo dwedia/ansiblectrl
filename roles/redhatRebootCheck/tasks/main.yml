@@ -16,8 +16,9 @@
 - name: output contents of reboot-required -r
   ansible.builtin.debug:
     msg: "{{ redHatNeedsRestartingStatus.stdout }}"
-#  ansible-builtin.debug:
     msg: "{{ redHatNeedsRestartingStatus.rc }}"
+  when:
+    - redHatNeedsRestartingStatus.rc != 0
 
 
 #- name: "[RedHat] Reboot Required"
