@@ -54,6 +54,9 @@
       ansible.builtin.lineinfile:
         dest: /etc/ssh/sshd_config.d/userchanges.conf
         line: "{{ item.line }}"
+        state: present
+        create: true
+        backup: true
       with_items:
         - line: PermitRootLogin no
         - line: PubkeyAuthentication yes
