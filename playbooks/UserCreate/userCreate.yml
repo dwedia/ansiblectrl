@@ -60,3 +60,8 @@
       ansible.builtin.lineinfile:
         path: /home/{{ user_name }}/.ssh/authorized_keys
         line: "{{ user_pubkey }}"
+        owner: "{{ user_name }}"
+        group: "{{ user_name }}"
+        mode: '0600'
+        backup: true
+        create: true
