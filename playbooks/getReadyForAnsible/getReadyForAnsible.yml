@@ -58,11 +58,22 @@
       with_items:
         - regex: ^#PermitRootLogin
           line: PermitRootLogin no
+        - regex: ^PermitRootLogin
+          line: PermitRootLogin no
+
         - regex: ^#PubkeyAuthentication
           line: PubkeyAuthentication yes
+        - regex: ^PubkeyAuthentication
+          line: PubkeyAuthentication yes
+
         - regex: ^#PasswordAuthentication
           line: PasswordAuthentication no
+        - regex: ^PasswordAuthentication
+          line: PasswordAuthentication no
+
         - regex: ^#PermitEmptyPasswords no
+          line: PermitEmptyPasswords no
+        - regex: ^PermitEmptyPasswords no
           line: PermitEmptyPasswords no
       notify:
         - restart sshd after editing sshd_config
