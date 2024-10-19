@@ -13,20 +13,9 @@
   failed_when: "redHatNeedsRestartingStatus.rc not in [0, 1]"
   changed_when: false
 
-- name: output contents of reboot-required -r
-  ansible.builtin.debug:
-    msg: "{{ redHatNeedsRestartingStatus.stdout }}"
-    msg: "{{ redHatNeedsRestartingStatus.rc }}"
-  when:
-    - redHatNeedsRestartingStatus.rc != 0
-    - "'Reboot is required' in redHatNeedsRestartingStatus.stdout"
-
-
 - name: "[RedHat] Reboot Required"
   debug:
     msg: "Reboot is Required on {{ ansible_hostname }}"
   when: 
-    # - redHatNeedsRestartingStatus.rc != 0 and "Reboot is required" in redHatNeedsRestartingStatus.stdout
-    # - redHatNeedsRestartingStatus.rc != 0 
     - "'Reboot is required' in redHatNeedsRestartingStatus.stdout"
     - redHatNeedsRestartingInstalled.stat.exists
