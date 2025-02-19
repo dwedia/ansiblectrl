@@ -19,8 +19,3 @@
   when: 
     - "'Reboot is required' in redHatNeedsRestartingStatus.stdout"
     - redHatNeedsRestartingInstalled.stat.exists
-
-- name: "[RedHat] needs-restarting package not installed"
-  ansible.builtin.debug:
-    msg: "needs-restarting package is not installed"
-  when: redHatNeedsRestartingInstalled not defined
