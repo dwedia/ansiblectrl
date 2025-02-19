@@ -1,0 +1,11 @@
+---
+
+- name: Upgrade RHEL Based
+  include_tasks: rhelBased.yml
+  when:
+    - ansible_facts['os_family'] == "RedHat"
+
+- name: Upgrade Debian Based
+  include_tasks: 
+  when:
+    - ansible_facts['os_family'] == "Debian"
