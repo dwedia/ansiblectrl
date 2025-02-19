@@ -1,0 +1,11 @@
+#### [DEBIAN] Check if reboot is needed ####
+---
+- name: "[DEBIAN] Check if reboot is needed"
+  stat:
+    path: /var/run/reboot-required
+  register: debianRebootRequired
+
+- name: "[DEBIAN] Reboot Required"
+  debug:
+    msg: "Reboot is Required on {{ inventory_hostname }}"
+  when: debianRebootRequired.stat.exists
