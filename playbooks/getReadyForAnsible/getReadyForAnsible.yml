@@ -11,13 +11,23 @@
       private: yes
 
   tasks:
-    - name: Create user
+    - name: REDHAT - Create user
       ansible.builtin.user:
         name: "{{ user_name }}"
         state: present
         password: "{{ user_password | password_hash('sha512') }}"
         groups: wheel
         create_home: true
+      when: ansible_facts['os_family'] == "RedHat"
+    
+    - name: DEBIAN - Create user
+      ansible.builtin.user:
+        name: "{{ user_name }}"
+        state: present
+        password: "{{ user_password | password_hash('sha512') }}"
+        groups: sudo
+        create_home: true
+      when: ansible_facts['os_family'] == "Debian"
 
     - name: Create drop-in sudoers file
       file:
