@@ -39,6 +39,16 @@
     group: poduser
     mode: '0744'
 
+- name: Create folder in /opt/podman for podman storage
+  ansible.builtin.file:
+    path: /opt/podman/storage
+    state: directory
+    owner: poduser
+    group: poduser
+    mode: '0744'
+
+
+
 - name: Ensure Epel repo is enabled (Rocky Linux)
   ansible.builtin.dnf:
     name: epel-release
