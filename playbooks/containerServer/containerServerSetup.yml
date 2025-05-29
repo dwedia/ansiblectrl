@@ -1,0 +1,7 @@
+---
+- name: Setup server for container use
+  hosts: "{{ hostVar | default('all') }}"
+  become: true
+
+  roles:
+    - role: containerServer
