@@ -2,7 +2,7 @@
 
 ---
 - name: Update Pihole on pihole servers
-  become: false
+  become: true
   #remote_user: ramiraz
   hosts: "{{ hostVar | default('pihole') }}"
 
