@@ -5,6 +5,7 @@
 - name: Reboot server ONLY USE WITH LIMIT
   hosts: "{{ hostVar | default('all') }}"
   become: true
+  serial: 1
 
 #  vars_files:
 #    - /home/ansibleadmin/ansibleAtHome/playbooks/vault/vaultfile.yml
