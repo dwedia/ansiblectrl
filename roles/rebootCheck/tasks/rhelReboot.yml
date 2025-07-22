@@ -17,5 +17,5 @@
   debug:
     msg: "Reboot is Required on {{ ansible_hostname }}"
   when: 
-    - "'Reboot is required' in redHatNeedsRestartingStatus.stdout"
     - redHatNeedsRestartingInstalled.stat.exists
+    - "'Reboot is required' in redHatNeedsRestartingStatus.stdout"
