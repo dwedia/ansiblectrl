@@ -46,10 +46,9 @@
     state: touch
 
 - name: Set new data-root folder in docker daemon.json
-  ansible.builtin.blockinfile:
-    path: /etc/docker/daemon.json
-    state: present
-    block: |
+  ansible.builtin.copy:
+    dest: /etc/docker/daemon.json
+    content: |
       {
         "data-root":"/opt/docker"
       }
