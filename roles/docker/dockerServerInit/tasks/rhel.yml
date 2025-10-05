@@ -32,13 +32,13 @@
     - /opt/docker
     - /opt/persistentStorage
 
-- name: copy contents of /var/lib/docker to /opt/docker
-  ansible.builtin.copy:
-    src: /var/lib/docker
-    dest: /opt/docker
-    group: docker
-    mode: '0774'
-    remote_src: true
+#- name: copy contents of /var/lib/docker to /opt/docker
+#  ansible.builtin.copy:
+#    src: /var/lib/docker
+#    dest: /opt/docker
+#    group: docker
+#    mode: '0774'
+#    remote_src: true
 
 - name: Create docker daemon.json file
   ansible.builtin.file:
