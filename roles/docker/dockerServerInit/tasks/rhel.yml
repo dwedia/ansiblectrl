@@ -9,7 +9,7 @@
 - name: Add docker repository
   ansible.builtin.yum_repository:
     name: DockerCE
-    Description: Docker CE Repo
+    description: Docker CE Repo
     baseurl: https://download.docker.com/linux/rhel/docker-ce.repo
     enabled: yes
 
