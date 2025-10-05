@@ -43,7 +43,7 @@
 - name: Create docker daemon.json file
   ansible.builtin.file:
     path: /etc/docker/daemon.json
-    state: present
+    state: touch
 
 - name: Set new data-root folder in docker daemon.json
   ansible.builtin.blockinfile:
