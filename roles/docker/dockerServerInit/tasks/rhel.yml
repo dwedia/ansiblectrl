@@ -15,7 +15,7 @@
 
 - name: Install packages for Docker CE
   ansible.builtin.dnf:
-    name: {{ item }}
+    name: "{{ item }}"
     state: present
   loop:
     - docker-ce
@@ -26,7 +26,7 @@
 
 - name: Create local docker folders in /opt
   ansible.builtin.file:
-    path: {{ item }}
+    path: "{{ item }}"
     state: directory
     group: docker
     mode: '0774'
