@@ -35,7 +35,7 @@
 - name: Update Apt cache
   ansible.builtin.apt:
     update_cache: true
-2
+
 - name: Install Docker CE
   ansible.builtin.apt:
     name: docker-ce
