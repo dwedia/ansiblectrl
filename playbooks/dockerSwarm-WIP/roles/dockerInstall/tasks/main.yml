@@ -1,23 +1,36 @@
 ---
-- name: ensure apt is using https
+- name: Ensure apt is using https
   ansible.builtin.apt:
     name: "{{ item }}"
     state: present
+    update_cache: yes
   loop:
     - apt-transport-https
     - ca-certificates
     - curl
+    - gnupg
     - software-properties-common
 
-- name: add docker gpg key
-  ansible.builtin.apt_key:
-    url: "https://download.docker.com/linux/ubuntu/gpg"
-    state: present
+- name: Add Docker GPG key (to /etc/apt/keyrings)
+  ansible.builtin.command:
+    cmd: >
+      bash -c "curl -fsSL https://download.docker.com/linux/ubuntu/gpg |
+      gpg --dearmor -o /etc/apt/keyrings/docker.asc"
+  args:
+    creates: /etc/apt/keyrings/docker.asc
 
-- name: add docker repository
+- name: Ensure keyring permissions are correct
+  ansible.builtin.file:
+    path: /etc/apt/keyrings/docker.asc
+    mode: '0644'
+
+- name: Add Docker apt repository (with signed-by)
   ansible.builtin.apt_repository:
-    repo: "{{ ubuntu_docker_apt_repository }}"
+    repo: >
+      deb [arch=amd64 signed-by=/etc/apt/keyrings/docker.asc]
+      https://download.docker.com/linux/ubuntu {{ ansible_distribution_release }} stable
     state: present
+    filename: docker
 
 - name: Install Docker CE
   ansible.builtin.apt:
