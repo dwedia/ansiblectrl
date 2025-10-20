@@ -1,0 +1,25 @@
+---
+- name: Check if Swarm is already initialized
+  ansible.builtin.command:
+    cmd: docker info
+  register: swarmInitCheck
+  changed_when: false
+
+- name: Initialize Docker Swarm
+  ansible.builtin.command:
+    cmd: docker swarm init --addvertise-addr {{ ansible_host }}
+  when: "'Swarm: inactive' in swarmInitCheck.stdout"
+  register: swarmInitialized
+  changed_when: swarmInitialized.rc == 0
+
+- name: Get Swarm join token for managers
+  ansible.builtin.command:
+    cmd: docker swarm join-token -q manager
+  register: managerJoinToken
+  changed_when: false
+
+- name: Get Swarm join token for workers
+  ansible.builtin.command:
+    cmd: docker swarm join-token -q worker
+  register: workerJoinToken
+  changed_when: false

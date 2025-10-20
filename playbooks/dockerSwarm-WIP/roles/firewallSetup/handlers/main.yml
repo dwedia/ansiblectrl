@@ -1,0 +1,9 @@
+---
+- name: Restart UFW
+  community.general.ufw:
+    state: reloaded
+
+- name: Reload Firewalld service
+  ansible.builtin.service:
+    name: firewalld
+    state: reloaded

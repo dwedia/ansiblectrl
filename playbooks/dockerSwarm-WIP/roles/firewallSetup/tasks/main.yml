@@ -1,0 +1,10 @@
+---
+- name: Setup firewalld on RPM based OS
+  include_tasks: firewalld.yml
+  when:
+    - ansible_facts['os_family'] == "RedHat"
+
+- name: Setup UFW on DEB based OS
+  include_tasks: ufw.yml
+  when:
+    - ansible_facts['os_family'] == "Debian"
