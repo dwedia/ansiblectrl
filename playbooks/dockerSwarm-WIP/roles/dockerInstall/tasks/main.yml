@@ -32,11 +32,14 @@
     state: present
     filename: docker
 
+- name: Update Apt cache
+  ansible.builtin.apt:
+    update_cache: true
+
 - name: Install Docker CE
   ansible.builtin.apt:
     name: docker-ce
     state: present
-    update_cache: true
 
 - name: Create local docker folders in /opt
   ansible.builtin.file:
