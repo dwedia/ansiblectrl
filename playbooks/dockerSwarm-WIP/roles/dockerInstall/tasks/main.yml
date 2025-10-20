@@ -27,7 +27,7 @@
 - name: Add Docker apt repository (with signed-by)
   ansible.builtin.apt_repository:
     repo: >
-      deb [arch=amd64 signed-by=/etc/apt/keyrings/docker.asc]
+      deb [arch={{ dpkg_arch.stdout }} signed-by=/etc/apt/keyrings/docker.asc]
       https://download.docker.com/linux/ubuntu {{ ansible_distribution_release }} stable
     state: present
     filename: docker
@@ -35,7 +35,7 @@
 - name: Update Apt cache
   ansible.builtin.apt:
     update_cache: true
-
+2
 - name: Install Docker CE
   ansible.builtin.apt:
     name: docker-ce
