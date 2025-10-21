@@ -5,14 +5,13 @@
   register: swarmInitCheck
   changed_when: false
 
-- name: IPv4
-  ansible.builtin.debug:
-    msg:
-      ipv4: "{{ hostvars[inventory_hostname]['ansible_default_ipv4']['address'] }}"
+- name: Store the IPv4 address in a variable
+  ansible.builtin.set_fact:
+    ipAddr: "{{ hostvars[inventory_hostname]['ansible_default_ipv4']['address'] }}"
 
 - name: Initialize Docker Swarm
   ansible.builtin.command:
-    cmd: docker swarm init --default-addr-pool 10.100.200.0/24 --advertise-addr {{ ansible_host }}
+    cmd: docker swarm init --default-addr-pool 10.100.200.0/24 --advertise-addr {{ ipAddr }}
   when: "'Swarm: inactive' in swarmInitCheck.stdout"
   register: swarmInitialized
   changed_when: swarmInitialized.rc == 0
