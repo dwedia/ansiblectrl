@@ -8,7 +8,7 @@
 - name: IPv4
   ansible.builtin.debug:
     msg:
-      ipv4: "{{ ansible_facts['env'].SSH_CONNECTION.split(' ')[2] }}"
+      ipv4: "{{ hostvars[inventory_hostname]['ansible_default_ipv4']['address'] }}"
 
 - name: Initialize Docker Swarm
   ansible.builtin.command:
