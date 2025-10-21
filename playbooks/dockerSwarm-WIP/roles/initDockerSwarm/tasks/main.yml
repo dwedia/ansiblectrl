@@ -5,6 +5,11 @@
   register: swarmInitCheck
   changed_when: false
 
+- name: IPv4
+  ansible.builtin.debug:
+    msg:
+      ipv4: "{{ ansible_facts['env'].SSH_CONNECTION.split(' ')[2] }}"
+
 - name: Initialize Docker Swarm
   ansible.builtin.command:
     cmd: docker swarm init --default-addr-pool 10.100.200.0/24 --advertise-addr {{ ansible_host }}
