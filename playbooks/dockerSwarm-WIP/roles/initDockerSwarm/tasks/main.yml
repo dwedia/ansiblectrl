@@ -7,7 +7,7 @@
 
 - name: Initialize Docker Swarm
   ansible.builtin.command:
-    cmd: docker swarm init --addvertise-addr {{ ansible_host }}
+    cmd: docker swarm init --default-addr-pool 10.100.200.0/24 --advertise-addr {{ ansible_host }}
   when: "'Swarm: inactive' in swarmInitCheck.stdout"
   register: swarmInitialized
   changed_when: swarmInitialized.rc == 0
