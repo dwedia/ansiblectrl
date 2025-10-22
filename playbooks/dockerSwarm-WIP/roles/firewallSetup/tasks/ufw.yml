@@ -27,7 +27,7 @@
     - port: 7946
       proto: udp
   when:
-    - "'Status: active' in ufwStatus.stdout"
+    - "'Status: active' in (ufwStatus.stdout | default(''))"
     - ufwInstalled.stat.exists
   notify: Restart UFW
 
