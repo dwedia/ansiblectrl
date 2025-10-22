@@ -23,6 +23,7 @@
   when:
     - workerJoinToken is defined
     - "'Swarm: inactive' in swarmInitCheck.stdout"
+    - swarmInitCheck is not defined
   register: swarmJoin
   changed_when: "'This node joined a swarm as a worker' in swarmJoin.stdout"
 
