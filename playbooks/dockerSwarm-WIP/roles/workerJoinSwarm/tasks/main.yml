@@ -18,9 +18,11 @@
       - join
       - --token
       - "{{ workerJoinToken }}"
-      - "{{ hostvars[groups['managers'][0]].ansible_host }}:2377"
+      - "{{ hostvars[groups['managers'][0]][ipAddr] }}:2377"
+#      - "{{ hostvars[groups['managers'][0]].ansible_host }}:2377"
   when:
     - workerJoinToken is defined
     - "'Swarm: inactive' in swarmInitCheck.stdout"
   register: swarmJoin
   changed_when: "'This node joined a swarm as a worker' in swarmJoin.stdout"
+
