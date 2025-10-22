@@ -18,6 +18,7 @@
       - join
       - --token
       - "{{ managerJoinToken }}"
-      - "{{ hostvars[groups['managers'][0]].ansible_host }}:2377"
+      - "{{ hostvars[groups['managers'][0]][ipAddr] }}:2377"
+      #- "{{ hostvars[groups['managers'][0]].ansible_host }}:2377"
   register: swarmJoin
   changed_when: "'This node joined a swarm as a manager' in swarmJoin.stdout"
