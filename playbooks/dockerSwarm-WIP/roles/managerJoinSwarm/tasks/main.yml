@@ -7,7 +7,7 @@
 
 - name: Retrieve manager join token from manager
   ansible.builtin.set_fact:
-    manager_token: "{{ hostvars[groups['managers'][0]]['managerJoinToken'].stdout }}"
+    managerJoinToken: "{{ hostvars[groups['managers'][0]]['managerJoinToken'].stdout }}"
   when: "'Swarm: inactive' in swarmInitCheck.stdout"
 
 - name: Join manager to Swarm
