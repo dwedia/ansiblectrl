@@ -5,10 +5,6 @@
   register: swarmInitCheck
   changed_when: false
 
-- name: output swarmInitCheck
-  ansible.builtin.debug:
-    var: swarmInitCheck
-
 - name: Retrieve worker join token from manager
   ansible.builtin.set_fact:
     workerJoinToken: "{{ hostvars[groups['managers'][0]]['workerJoinToken'].stdout }}"
