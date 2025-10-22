@@ -28,7 +28,6 @@
       proto: udp
   when:
     - "'Status: active' in ufwStatus.stdout"
-    - ufwStatus is defined
     - ufwInstalled.stat.exists
   notify: Restart UFW
 
