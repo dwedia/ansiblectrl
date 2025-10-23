@@ -1,5 +1,6 @@
 # Docker Swarm Mode setup playbook
 This playbook is meant to set up a Docker Swarm mode cluster.
+If the firewall is enabled and active, it will open the ports needed for the swarms internal communication.
 
 So far it has been tested on a three node raspberry pi cluster running Ubuntu Server 24.04 LTS.
 
@@ -7,23 +8,32 @@ So far it has been tested on a three node raspberry pi cluster running Ubuntu Se
 
 The folder structure is set up like so:
 
-- collections
+- collections/
     - This is where the collections required for this to work will go, along with the requirements.yml file.
 
-- inventory
+- inventory/
     - The hosts.yml file is the inventory file where we define the manager and worker nodes.
     - group_vars/all.yml file to define inventory wide variables, like the ansible user name, the become method and the like.
 
-- playbooks
+- playbooks/
     - The playbook file is here
 
-- roles
+- roles/
     - The roles for the set are here.
 
-## How to use it:
+- ansible.cfg
+    - project specific ansible.cfg file. Here we can define the location of the private key file, used for ansible to login to the targets.
+
+## Prerequisites
+This project depends on a few things to work.
+
+- ansible user account on the targets
+    - In this case, it is called ansibleuser, but it could be called whatever. It could also be the root account, if you want. Whatever account name is used, should be defined in the ansible.cfg file.
+    - a public key should have been copied over to the targets with the `ssh-copy-id` command, to the ansible user account on the target. If we want to use password authentication instead, the `ansible-playbook` command should be appended with `-k`.
+
+## How to use it
 
 ```bash
 ansible-playbook playbooks/dockerSwarmDeploy.yml
 ```
 
-This sets up a docker swarm node cluster. If the firewall is enabled and active, it will open the ports needed for the swarms internal communication.
