@@ -27,9 +27,20 @@ The folder structure is set up like so:
 ## Prerequisites
 This project depends on a few things to work.
 
+- ansible or ansible-core.
+    - This project have been created and tested with ansible-core.
+
 - ansible user account on the targets
     - In this case, it is called ansibleuser, but it could be called whatever. It could also be the root account, if you want. Whatever account name is used, should be defined in the ansible.cfg file.
     - a public key should have been copied over to the targets with the `ssh-copy-id` command, to the ansible user account on the target. If we want to use password authentication instead, the `ansible-playbook` command should be appended with `-k`.
+
+- These ansible-galaxy collections.
+    - install the collections with the command: `ansible-galaxy collection install -r collections/requirements.yml`
+    - They are listed in the collections/requirements.yml file.:
+        - ansible.utils
+        - community.general
+        - ansible.posix
+        - community.docker
 
 ## How to use it
 
