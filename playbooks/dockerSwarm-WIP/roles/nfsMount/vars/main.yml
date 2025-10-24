@@ -1,0 +1,4 @@
+---
+nfsFolder: /opt/nfsShare
+nfsServer: fafnir.dragonflight.dk
+nfsShare: /volume3/swarm
