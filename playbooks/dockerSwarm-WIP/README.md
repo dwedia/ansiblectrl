@@ -48,3 +48,11 @@ This project depends on a few things to work.
 ansible-playbook playbooks/dockerSwarmDeploy.yml
 ```
 
+<<<<<<< Updated upstream
+=======
+This sets up a docker swarm node cluster. If the firewall is enabled and active, it will open the ports needed for the swarms internal communication.
+
+## To do
+  - Test on a different architecture than arm.
+  - Create roles for setting up a swarm on RHEL
+>>>>>>> Stashed changes
