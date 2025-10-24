@@ -1,0 +1,13 @@
+---
+#- name: Install NFS on RPM based systems
+#  include_tasks: nfsRHEL.yml
+#  when:
+#    - ansible_facts['os_family'] == "RedHat"
+
+- name: Install NFS on DEB based OS
+  include_tasks: nfsDEB.yml
+  when:
+    - ansible_facts['os_family'] == "Debian"
+
+- name: setup NFS
+  include_tasks: nfsSetup.yml
