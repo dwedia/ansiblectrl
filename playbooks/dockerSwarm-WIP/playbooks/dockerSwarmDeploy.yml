@@ -5,6 +5,7 @@
   roles:
     - dockerInstall
     - firewallSetup
+    - nfsMount
 
 - name: Init Docker Swarm
   hosts: managers[0]
