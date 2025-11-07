@@ -1,0 +1,28 @@
+---
+- name: Check ansibleuser UID
+  ansible.builtin.command:
+    cmd: "id -u ansibleuser"
+  register: ansibleuseruid
+  failed_when: ansibleuseruid == 0 or ansibleuseruid != 5000
+  changed_when: false
+
+- name: Check ansibleuser GID
+  ansible.builtin.command:
+    cmd: "id -g ansibleuser"
+  register: ansibleusergid
+  failed_when: ansibleusergid == 0 or ansibleusergid != 5000
+  changed_when: false
+
+- name: Create ansibleuser group
+  ansible.builtin.group:
+    name: ansibleuser
+    gid: 5000
+
+- name: Create ansibleuser user
+  ansible.builtin.user:
+    name: ansibleuser
+    group: ansibleuser
+    shell: /bin/bash
+    uid: 5000
+
+# NOT DONE. still needs to be finished

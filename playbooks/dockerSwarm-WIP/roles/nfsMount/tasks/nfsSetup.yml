@@ -1,0 +1,22 @@
+---
+- name: Create folder for nfs mount
+  ansible.builtin.file:
+    path: "{{ nfsFolder }}"
+    state: directory
+    group: docker
+    mode: '2775'
+
+- name: Mount NFS share
+  ansible.posix.mount:
+    src: "{{ nfsServer }}:{{ nfsShare }}"
+    path: "{{ nfsFolder }}"
+    opts: rw,nolock
+    state: mounted
+    boot: true
+    fstype: nfs
+
+- name: "Ensure ownership and permissions of {{ nfsFolder }} are still correct"
+  ansible.builtin.file:
+    path: "{{ nfsFolder }}"
+    group: docker
+    mode: '2775'

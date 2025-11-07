@@ -1,0 +1,59 @@
+---
+- name: Create user playbook
+  hosts: "{{ hostVar | default('all') }}"
+  become: true
+
+  vars_prompt:
+  - name: user_name
+    prompt: "Enter the user name:"
+    private: no
+  - name: user_password
+    prompt: "Enter the user password:"
+    private: yes
+  - name: user_sudo_choice
+    prompt: "Should the user have sudo access? Y/N "
+    private: no
+
+  tasks:
+  - name: Create user
+    ansible.builtin.user:
+      name: "{{ user_name }}"
+      state: present
+      password: "{{ user_password | password_hash('sha512') }}"
+      create_home: true
+
+  - name: create .ssh if it does not exist
+    file:
+      path: /home/{{ user_name }}/.ssh
+      state: directory
+      mode: '0700'
+      owner: "{{ user_name }}"
+      group: "{{ user_name }}"
+
+  - name: copy authorized_keys file
+    copy:
+      src: authorized_keys
+      dest: /home/{{ user_name }}/.ssh/authorized_keys
+      owner: "{{ user_name }}"
+      group: "{{ user_name }}"
+      mode: '0600'
+      backup: yes
+
+  - name: Sudo access fact
+    ansible.builtin.set_fact: "{{ user_sudo_choice | default('N') }}"
+
+  - name: create sudoers.d file for user
+    ansible.builtin.file:
+      path: /etc/sudoers.d/{{ user_name }}
+      state: touch
+      owner: root
+      group: root
+      mode: 0440
+    when: user_sudo_choice == "y" or user_sudo_choice == "Y"
+
+  - name: edit sudoers file for user
+    ansible.builtin.lineinfile:
+      dest: /etc/sudoers.d/{{ user_name }}
+      state: present
+      line: '{{ user_name }} ALL=(ALL) ALL'
+    when: user_sudo_choice == "y" or user_sudo_choice == "Y"

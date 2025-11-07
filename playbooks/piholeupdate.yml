@@ -1,0 +1,19 @@
+# Playbook to update pihole. Since there is no module for this, we will use the shell module
+
+---
+- name: Update Pihole on pihole servers
+  become: true
+  #remote_user: ramiraz
+  hosts: "{{ hostVar | default('pihole') }}"
+
+  tasks:
+    - name: Update pihole
+      ansible.builtin.command:
+        cmd: pihole -up
+      register: piUpdate
+      changed_when: false
+
+    - name: Print out pihole update information
+      ansible.builtin.debug:
+        msg: "{{ piUpdate.stdout }}"
+      when: piUpdate is defined

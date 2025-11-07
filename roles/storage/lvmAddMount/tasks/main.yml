@@ -1,0 +1,29 @@
+---
+- name: Create Physical volume and Volume Group
+  community.general.lvg:
+    pvs: "{{ pvName }}"
+    vg: "{{ vgName }}"
+
+- name: Create Logical Volume in volume Group
+  community.general.lvol:
+    vg: "{{ vgName }}"
+    lv: "{{ lvName }}"
+    size: +100%FREE
+
+- name: Create filesystem on logical volume
+  community.general.filesystem:
+    fstype: xfs
+    dev: "/dev/{{ vgName }}/{{ lvName }}"
+
+- name: Create target directory
+  ansible.builtin.file:
+    path: "{{ dirPath }}"
+    state: directory
+    mode: '0755'
+
+- name: Mount the new mountpoint
+  ansible.posix.mount:
+    path: "{{ dirPath }}"
+    src: "/dev/{{ vgName }}/{{ lvName }}"
+    fstype: xfs
+    state: mounted

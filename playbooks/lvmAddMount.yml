@@ -1,0 +1,22 @@
+---
+- hosts: "{{ hostVar | default('all') }}"
+  become: true
+  vars_prompt:
+    - name: pvName
+      prompt: "Full path of disk: "
+      private: no
+
+    - name: vgName
+      prompt: "Desired Volume Group name: "
+      private: no
+
+    - name: lvName
+      prompt: "Desired Logical Volume name: "
+      private: no
+
+    - name: dirPath
+      prompt: "full path to folder for mounting: "
+      private: no
+  
+  roles:
+    - storage/lvmAddMount

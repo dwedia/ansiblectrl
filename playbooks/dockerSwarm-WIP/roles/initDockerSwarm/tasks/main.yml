@@ -1,0 +1,29 @@
+---
+- name: Check if Swarm is already initialized
+  ansible.builtin.command:
+    cmd: docker info
+  register: swarmInitCheck
+  changed_when: false
+
+- name: Store the IPv4 address in a variable
+  ansible.builtin.set_fact:
+    ipAddr: "{{ hostvars[inventory_hostname]['ansible_default_ipv4']['address'] }}"
+
+- name: Initialize Docker Swarm
+  ansible.builtin.command:
+    cmd: docker swarm init --default-addr-pool 10.100.200.0/24 --advertise-addr {{ ipAddr }}
+  when: "'Swarm: inactive' in swarmInitCheck.stdout"
+  register: swarmInitialized
+  changed_when: swarmInitialized.rc == 0
+
+- name: Get Swarm join token for managers
+  ansible.builtin.command:
+    cmd: docker swarm join-token -q manager
+  register: managerJoinToken
+  changed_when: false
+
+- name: Get Swarm join token for workers
+  ansible.builtin.command:
+    cmd: docker swarm join-token -q worker
+  register: workerJoinToken
+  changed_when: false

@@ -1,0 +1,34 @@
+---
+- name: Create user playbook
+  hosts: "{{ hostVar }}"
+  become: true
+  remote_user: root
+  vars_prompt:
+  - name: user_name
+    prompt: "Enter the user name:"
+    private: no
+  - name: user_password
+    prompt: "Enter the user password:"
+    private: yes
+
+  tasks:
+  - name: Create user
+    ansible.builtin.user:
+      name: "{{ user_name }}"
+      state: present
+      password: "{{ user_password | password_hash('sha512') }}"
+      create_home: true
+
+  - name: create sudoers.d file for user
+    ansible.builtin.file:
+      path: /etc/sudoers.d/{{ user_name }}
+      state: touch
+      owner: root
+      group: root
+      mode: 0440
+
+  - name: edit sudoers file for user
+    ansible.builtin.lineinfile:
+      dest: /etc/sudoers.d/{{ user_name }}
+      state: present
+      line: '{{ user_name }} ALL=(ALL) NOPASSWD:ALL'

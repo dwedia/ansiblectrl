@@ -1,0 +1,34 @@
+---
+- name: Check if firewalld i installed
+  ansible.builtin.stat:
+    path: /usr/sbin/firewalld
+  register: firewalldInstalled
+
+- name: Check if Firewalld service is active
+  ansible.builtin.command:
+    cmd: systemctl is-active firewalld.service
+  register: firewalldStatus
+  when: firewalldInstalled.stat.exists
+  changed_when: false
+  failed_when: false
+
+- name: Open firewall ports needed for Docker Swarm node communication
+  ansible.posix.firewalld:
+    port: "{{ item.port }}/{{ item.proto }}"
+    permanent: true
+    state: enabled
+    immediate: false
+  loop:
+    - port: 2377
+      proto: tcp
+    - port: 4789
+      proto: udp
+    - port: 7946
+      proto: tcp
+    - port: 7946
+      proto: udp
+  when:
+    - firewalldInstalled.stat.exists
+    - firewalldStatus.stdout.strip() == "active"
+  notify: Reload Firewalld service
+      

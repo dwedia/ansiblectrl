@@ -1,0 +1,11 @@
+---
+
+- name: Check if RHEL Based needs a reboot
+  include_tasks: rhelReboot.yml
+  when:
+    - ansible_facts['os_family'] == "RedHat"
+
+- name: Upgrade Debian Based  needs a reboot
+  include_tasks: debianReboot.yml
+  when:
+    - ansible_facts['os_family'] == "Debian"

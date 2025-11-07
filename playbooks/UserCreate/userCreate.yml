@@ -1,0 +1,67 @@
+---
+- name: Create user on target
+  hosts: all
+  become: true
+
+  vars_prompt:
+    - name: user_name
+      prompt: "Enter the user name"
+      private: no
+    - name: user_password
+      prompt: "Enter the user password"
+      private: yes
+    - name: user_pubkey
+      prompt: "Enter the users public key for ssh"
+      private: no
+    - name: user_sudouser
+      prompt: "Add user to sudo/wheel group? Y/N"
+      private: no
+
+  tasks:
+    - name: Create user
+      ansible.builtin.user:
+        name: "{{ user_name }}"
+        state: present
+        password: "{{ user_password | password_hash('sha512') }}"
+        create_home: true
+    
+    - name: Add user to sudo/wheel group
+      ansible.builtin.user:
+        name: "{{ user_name }}"
+        groups: wheel
+        append: true
+      when: user_sudouser == "Y"
+    
+    - name: Create drop-in sudoers file
+      ansible.builtin.file:
+        path: /etc/sudoers.d/{{ user_name }}
+        state: touch
+        owner: root
+        group: root
+        mode: 0440
+      when: user_sudouser == "Y"
+
+    - name: add line in sudoers file
+      ansible.builtin.lineinfile:
+        dest: /etc/sudoers.d/{{ user_name }}
+        state: present
+        line: '{{ user_name }} ALL=(ALL:ALL) ALL'
+      when: user_sudouser == "Y"
+
+    - name: create .ssh if it does not exist
+      ansible.builtin.file:
+        path: /home/{{ user_name }}/.ssh
+        state: directory
+        mode: '0700'
+        owner: "{{ user_name }}"
+        group: "{{ user_name }}"
+
+    - name: Add public key to Authorized_keys file
+      ansible.builtin.lineinfile:
+        path: /home/{{ user_name }}/.ssh/authorized_keys
+        line: "{{ user_pubkey }}"
+        owner: "{{ user_name }}"
+        group: "{{ user_name }}"
+        mode: '0600'
+        backup: true
+        create: true

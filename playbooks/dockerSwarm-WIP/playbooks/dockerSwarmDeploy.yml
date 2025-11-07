@@ -1,0 +1,26 @@
+---
+- name: Install Docker
+  hosts: all
+  become: true
+  roles:
+    - dockerInstall
+    - firewallSetup
+    - nfsMount
+
+- name: Init Docker Swarm
+  hosts: managers[0]
+  become: true
+  roles:
+    - initDockerSwarm
+
+- name: Join Managers
+  hosts: managers
+  become: true
+  roles:
+    - managerJoinSwarm
+
+- name: Join Workers
+  hosts: workers
+  become: true
+  roles:
+    - workerJoinSwarm

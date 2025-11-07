@@ -1,0 +1,21 @@
+#### [REDHAT] Check if reboot is needed ####
+---
+- name: "[REDHAT] Check if needs-restarting is installed"
+  stat:
+    path: /usr/bin/needs-restarting
+  register: redHatNeedsRestartingInstalled
+  when: ansible_facts['os_family'] == "RedHat"
+
+- name: "[REDHAT] run needs-restarting"
+  shell: sudo needs-restarting -r
+  register: redHatNeedsRestartingStatus
+  when: redHatNeedsRestartingInstalled.stat.exists
+  failed_when: "redHatNeedsRestartingStatus.rc not in [0, 1]"
+  changed_when: false
+
+- name: "[RedHat] Reboot Required"
+  debug:
+    msg: "Reboot is Required on {{ ansible_hostname }}"
+  when: 
+    - redHatNeedsRestartingInstalled.stat.exists
+    - "'Reboot is required' in redHatNeedsRestartingStatus.stdout"

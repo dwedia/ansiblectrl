@@ -1,0 +1,32 @@
+---
+
+- name: Create user playbook
+  hosts: all
+  become: true
+  vars_prompt:
+    - name: targetUser
+      prompt: "Enter the username of the target user: "
+      private: false
+    - name: sshKeyInput
+      prompt: "Enter the contents of the .pub file you want to copy over: "
+      private: false
+
+  tasks:
+    - name: Create .ssh folder, if it does not exist
+      ansible.builtin.file:
+        path: "/home/{{ targetUser }}/.ssh"
+        state: directory
+        owner: "{{ targetUser }}"
+        group: "{{ targetUser }}"
+        mode: '0700'
+
+    - name: Copy ssh key
+      ansible.builtin.lineinfile:
+        path: "/home/{{ targetUser }}/.ssh/authorized_keys"
+        line: "{{ sshKeyInput }}"
+        state: present
+        owner: "{{ targetUser }}"
+        group: "{{ targetUser }}"
+        mode: '0600'
+        backup: true
+        create: true

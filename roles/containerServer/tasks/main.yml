@@ -1,0 +1,80 @@
+---
+- name: Create podman local service account
+  ansible.builtin.user:
+    name: poduser
+    create_home: true
+    shell: /bin/bash
+    groups: systemd-journal
+    append: true
+
+- name: Enable account lingering for poduser
+  ansible.builtin.command:
+    cmd: loginctl enable-linger poduser
+    creates: /var/lib/systemd/linger/poduser
+
+- name: Add poduser to subuid file
+  ansible.builtin.lineinfile:
+    path: /etc/subuid
+    line: poduser:100000:65536
+    state: present
+    backup: true
+
+- name: Add poduser to subgid file
+  ansible.builtin.lineinfile:
+    path: /etc/subgid
+    line: poduser:100000:65536
+    state: present
+    backup: true
+
+- name: Enable session bus for systemd
+  ansible.builtin.lineinfile:
+    path: /home/poduser/.bash_profile
+    line: export DBUS_SESSION_BUS_ADDRESS="unix:path=/run/user/$UID/bus"
+
+- name: Create folder in /opt for podman
+  ansible.builtin.file:
+    path: /opt/podman
+    state: directory
+    owner: poduser
+    group: poduser
+    mode: '0744'
+
+- name: Create folder in /opt/podman for podman storage
+  ansible.builtin.file:
+    path: /opt/podman/storage
+    state: directory
+    owner: poduser
+    group: poduser
+    mode: '0744'
+
+
+
+- name: Ensure Epel repo is enabled (Rocky Linux)
+  ansible.builtin.dnf:
+    name: epel-release
+    state: present
+
+- name: Install container-tools, podman-compose and git
+  ansible.builtin.dnf:
+    name:
+      - container-tools
+      - podman-compose
+      - git
+    enablerepo: epel
+    state: present
+
+- name: Change rootless podman graphroot
+  ansible.builtin.lineinfile:
+    path: /etc/containers/storage.conf
+    regexp: '# rootless_storage_path = "$HOME/.local/share/containers/storage'
+    insertbefore: '# Transient store mode makes all container'
+    line: 'rootless_storage_path = "/opt/podman/storage"'
+
+- name: Set SELinux fcontext for new graphroot
+  ansible.builtin.command: semanage fcontext -a -e /var/lib/containers /opt/podman/storage
+  changed_when: false
+
+- name: Run restorecon to make sure SELinux context is set correctly
+  ansible.builtin.command: restorecon -R -v /opt/podman/storage
+  changed_when: false
+

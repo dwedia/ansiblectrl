@@ -1,0 +1,18 @@
+---
+
+- name: Update DNF cache
+  ansible.builtin.dnf:
+    update_cache: true
+
+- name: Upgrade packages on RHEL 8 or 9 Based OS
+  ansible.builtin.dnf:
+    name: "*"
+    state: latest
+  register: dnfCommandOut
+  when: 
+    - ansible_facts['os_family'] == "RedHat"
+
+- name: Print errors if DNF failed
+  debug: 
+    msg: "dnf command procuded errors"
+  when: dnfCommandOut is not defined

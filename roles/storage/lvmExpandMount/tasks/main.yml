@@ -1,0 +1,14 @@
+---
+- name: Expand the Physical Volume and Volume Group to 100% available size
+  community.general.lvg:
+    pvs: "{{ pvName }}"
+    vg: "{{ vgName }}"
+    pvresize: true
+
+- name: Expand the logical Volume with the available free space in VG
+  community.general.lvol:
+    vg: "{{ vgName }}"
+    lv: "{{ lvName }}"
+    size: +100%FREE
+    resizefs: true
+    

@@ -1,0 +1,14 @@
+---
+- name: Update draconia.dk
+  hosts: ravenOracleVps.draconia.dk
+  become: false
+  remote_user: raven
+  tasks:
+
+    - name: Pull git repository
+      ansible.builtin.git:
+        repo: git@github.com:dwedia/DraconiaWeb.git
+        dest: /home/raven/DraconiaWeb/
+
+    - name: Restart Apache Container
+      ansible.builtin.shell: cd /home/raven/apache && docker compose down && sleep 2 && docker compose pull && docker compose up -d

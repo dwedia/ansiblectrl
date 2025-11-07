@@ -1,0 +1,61 @@
+---
+## This sets up docker on a RHEL server
+
+- name: Install dnf-plugins-core
+  ansible.builtin.dnf:
+    name: dnf-plugins-core
+    state: present
+
+- name: Add Docker CE repo using dnf config-manager
+  ansible.builtin.command: dnf config-manager --add-repo https://download.docker.com/linux/rhel/docker-ce.repo
+  args:
+    creates: /etc/yum.repos.d/docker-ce.repo
+
+- name: Install packages for Docker CE
+  ansible.builtin.dnf:
+    name: "{{ item }}"
+    state: present
+  loop:
+    - docker-ce
+    - docker-ce-cli
+    - containerd.io
+    - docker-buildx-plugin
+    - docker-compose-plugin
+
+- name: Create local docker folders in /opt
+  ansible.builtin.file:
+    path: "{{ item }}"
+    state: directory
+    group: docker
+    mode: '0774'
+  loop:
+    - /opt/docker
+    - /opt/persistentStorage
+
+#- name: copy contents of /var/lib/docker to /opt/docker
+#  ansible.builtin.copy:
+#    src: /var/lib/docker
+#    dest: /opt/docker
+#    group: docker
+#    mode: '0774'
+#    remote_src: true
+
+- name: Create docker daemon.json file
+  ansible.builtin.file:
+    path: /etc/docker/daemon.json
+    state: touch
+
+- name: Set new data-root folder in docker daemon.json
+  ansible.builtin.copy:
+    dest: /etc/docker/daemon.json
+    content: |
+      {
+        "data-root":"/opt/docker"
+      }
+
+- name: Enable docker service
+  ansible.builtin.service:
+    name: docker.service
+    enabled: true
+    state: started
+

@@ -1,0 +1,10 @@
+---
+- name: Update Apt cache
+  ansible.builtin.apt:
+    update_cache: true
+
+- name: Install nfs-common is installed
+  ansible.builtin.apt:
+    name: nfs-common
+    state: present
+

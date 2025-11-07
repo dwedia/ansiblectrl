@@ -1,0 +1,6 @@
+---
+- name: Install nfs-common is installed
+  ansible.builtin.dnf:
+    name: nfs-utils
+    state: present
+    update_cache: true

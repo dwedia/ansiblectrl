@@ -1,0 +1,51 @@
+---
+- name: Create user playbook
+  hosts: "{{ hostVar }}"
+  become: true
+  vars_prompt:
+  - name: user_password
+    prompt: "Enter the user password:"
+    private: yes
+
+  tasks:
+  - name: Create user
+    ansible.builtin.user:
+      name: turnOffUser
+      state: present
+      password: "{{ user_password | password_hash('sha512') }}"
+      shell: /bin/bash
+      create_home: true
+
+  - name: Create .ssh dir
+    ansible.builtin.file:
+      path: /home/turnOffUser/.ssh
+      state: directory
+      mode: '0700'
+      owner: turnOffUser
+      group: turnOffUser
+
+  - name: Add public key to authorized key file
+    ansible.builtin.lineinfile:
+      path: /home/turnOffUser/.ssh/authorized_keys
+      line: "{{ lookup('file', 'turnOffUserKey.pub') }}"
+      create: yes
+      backup: yes
+      mode: '0600'
+      owner: turnOffUser
+      group: turnOffUser
+
+  - name: create sudoers.d file for user
+    ansible.builtin.file:
+      path: /etc/sudoers.d/turnOffUser
+      state: touch
+      owner: root
+      group: root
+      mode: '0440'
+  
+  - name: Edit Sudoers file to allow user to turn off and reboot
+    ansible.builtin.blockinfile:
+      path: /etc/sudoers.d/turnOffUser
+      block: | 
+        turnOffUser ALL = NOPASSWD: /usr/sbin/poweroff
+        turnOffUser ALL = NOPASSWD: /usr/sbin/reboot
+        turnOffUser ALL = NOPASSWD: /usr/sbin/shutdown

@@ -1,0 +1,28 @@
+## Ansible file for rebooting a server
+# indentation: 2 spaces
+
+---
+- name: Reboot server ONLY USE WITH LIMIT
+  hosts: "{{ hostVar | default('all') }}"
+  become: true
+  serial: 1
+
+#  vars_files:
+#    - /home/ansibleadmin/ansibleAtHome/playbooks/vault/vaultfile.yml
+
+#  vars:
+#    ansible_become_pass: "{{ sudo_password }}"
+
+  tasks:
+    #- name: Wait for user confirmation
+    #  ansible.builtin.pause:
+    #    seconds: 10
+    #    prompt: "Press ctrl+c to continue or wait 10 seconds - DID YOU REMEMBER TO USE LIMIT?"
+
+    - name: Reboot Debian based servers
+      ansible.builtin.reboot:
+      when: ansible_facts['os_family'] == "Debian"
+
+    - name: Reboot RedHat based servers
+      ansible.builtin.reboot:
+      when: ansible_facts['os_family'] == "RedHat"
