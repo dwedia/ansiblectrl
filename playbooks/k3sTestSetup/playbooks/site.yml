@@ -4,7 +4,7 @@
   become: true
   roles:
     - firewallSetupControlNodes
-    - k3s_server
+    - k3sControlNode
 
 - name: 2. Get K3s Join Token and Server IP
   hosts: k3s_servers[0] # Target only the first server to get the token
@@ -33,4 +33,4 @@
   become: true
   roles:
     - firewallSetupWorkerNodes
-    - k3s_agents
+    - k3sWorkerNode
