@@ -1,0 +1,36 @@
+---
+- name: 1. Setup K3s Control Plane Node
+  hosts: k3s_servers
+  become: true
+  roles:
+    - firewallSetupControlNodes
+    - k3s_server
+
+- name: 2. Get K3s Join Token and Server IP
+  hosts: k3s_servers[0] # Target only the first server to get the token
+  become: true
+  gather_facts: false
+  tasks:
+    - name: Get K3s token from server
+      slurp:
+        src: /var/lib/rancher/k3s/server/node-token
+      register: k3s_token_file
+
+    - name: Set fact for k3s token and URL
+      set_fact:
+        k3s_token: "{{ k3s_token_file.content | b64decode | trim }}"
+        # Use the inventory IP for the agent's K3S_URL
+        k3s_server_url: "https://{{ hostvars[inventory_hostname]['ansible_host'] }}:6443"
+      delegate_to: localhost
+
+    - name: Display K3s token and server URL (optional)
+      debug:
+        msg: "Token: {{ k3s_token }}, Server URL: {{ k3s_server_url }}"
+      delegate_to: localhost
+
+- name: 3. Setup K3s Agent Nodes
+  hosts: k3s_agents
+  become: true
+  roles:
+    - firewallSetupWorkerNodes
+    - k3s_agents

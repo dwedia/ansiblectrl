@@ -1,0 +1,48 @@
+---
+# This role installs K3s as a server node.
+- name: Download k3s binary
+  ansible.builtin.get_url:
+    url: "https://github.com/k3s-io/k3s/releases/download/{{ k3s_version }}/k3s"
+    dest: /usr/local/bin/k3s
+    mode: '0755'
+    owner: root
+    group: root
+  register: k3s_binary_download
+
+- name: Create symlinks for k3s utilities
+  ansible.builtin.file:
+    src: /usr/local/bin/k3s
+    dest: "/usr/local/bin/{{ item }}"
+    state: link
+  loop:
+    - kubectl
+    - crictl
+    - ctr
+
+- name: Create K3s config directory
+  ansible.builtin.file:
+    path: /etc/rancher/k3s
+    state: directory
+    mode: '0755'
+    owner: root
+    group: root
+
+- name: Install K3s server using the binary and arguments (mimicking the script's core action)
+  ansible.builtin.command:
+    cmd: /usr/local/bin/k3s server
+    creates: /etc/systemd/system/k3s.service
+  # The 'creates' ensures this only runs on a fresh install, like the script would.
+  # This command generates the service file, fetches dependencies, and starts k3s.
+
+- name: Enable and Start K3s Service
+  systemd:
+    name: k3s
+    state: started
+    enabled: yes
+    daemon_reload: yes
+
+- name: Wait for K3s to be ready and generate the token
+  ansible.builtin.wait_for:
+    path: /var/lib/rancher/k3s/server/node-token
+    timeout: 300
+    msg: "K3s server token did not appear within 300 seconds."

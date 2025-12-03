@@ -1,0 +1,18 @@
+[k3s_servers]
+#k3s-master-01 ansible_host=YOUR_MASTER_IP
+kubetest01.dragonflight.dk
+
+[k3s_agents]
+#k3s-worker-01 ansible_host=YOUR_WORKER_01_IP
+#k3s-worker-02 ansible_host=YOUR_WORKER_02_IP
+kubetest02.dragonflight.dk
+kubetest03.dragonflight.dk
+
+
+[k3s_cluster:children]
+k3s_servers
+k3s_agents
+
+[all:vars]
+ansible_user=ansibleuser
+k3s_version=v1.28.8+k3s1  # Specify a version or let it default
