@@ -26,7 +26,7 @@
       proto: udp
     - port: 10250 # Kubelet Metrics
       proto: tcp
-    - port: '30000:32767' # Nodeport ranges
+    - port: '30000-32767' # Nodeport ranges
       proto: tcp
   when:
     - "'Status: active' in (ufwStatus.stdout | default(''))"
