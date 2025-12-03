@@ -25,9 +25,9 @@
       proto: tcp
     - port: 8472 # Flannel VXLAN
       proto: udp
-    - port: '2379:2380' # ETCD port for HA Clusters
+    - port: '2379-2380' # ETCD port for HA Clusters
       proto: tcp
-    - port: '30000:32767' # Nodeport ranges
+    - port: '30000-32767' # Nodeport ranges
       proto: tcp
     - port: 10250 # Kubelet Metrics
       proto: tcp
