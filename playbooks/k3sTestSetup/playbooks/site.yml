@@ -32,7 +32,7 @@
       ansible.builtin.add_host:
         name: "{{ item }}"
         k3s_token: "{{ k3s_token_file.content | b64decode | trim }}"
-        k3s_server_url: "https://{{ hostvars[inventory_hostname]['ansible_host'] }}:6443"
+        k3s_server_url: "https://{{ hostvars[inventory_hostname]['ansible_host'] | default(inventory_hostname) }}:6443"
       # 'add_host' here is used to dynamically set host/group variables for the current run.
       delegate_to: localhost # Run this on the control node
       run_once: true         # Ensure it only runs once, regardless of the host count
