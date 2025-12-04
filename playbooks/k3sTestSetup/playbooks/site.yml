@@ -28,14 +28,16 @@
         msg: "Token: {{ k3s_token }}, Server URL: {{ k3s_server_url }}"
       delegate_to: localhost
     
-    - name: Export K3s facts to the k3s_agents group
-      set_fact:
-        k3s_token: "{{ hostvars['localhost']['k3s_token'] }}"
-        k3s_server_url: "{{ hostvars['localhost']['k3s_server_url'] }}"
-      # The important change: set these facts on the worker nodes (k3s_agents)
-      # by delegating the fact setting to the loop, which uses the group as the iteration target.
-      delegate_to: "{{ item }}"
+    - name: Set variables for the k3s_agents group (accessible in Play 3)
+      ansible.builtin.add_host:
+        name: "{{ item }}"
+        k3s_token: "{{ k3s_token_temp }}"
+        k3s_server_url: "{{ k3s_server_url_temp }}"
+      # 'add_host' here is used to dynamically set host/group variables for the current run.
+      delegate_to: localhost # Run this on the control node
+      run_once: true         # Ensure it only runs once, regardless of the host count
       with_items: "{{ groups['k3s_agents'] }}"
+      # Now, k3s_token and k3s_server_url are defined in hostvars for every worker.
 
 - name: 3. Setup K3s Agent Nodes
   hosts: k3s_agents
