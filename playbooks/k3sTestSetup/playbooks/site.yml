@@ -27,6 +27,15 @@
       debug:
         msg: "Token: {{ k3s_token }}, Server URL: {{ k3s_server_url }}"
       delegate_to: localhost
+    
+    - name: Export K3s facts to the k3s_agents group
+      set_fact:
+        k3s_token: "{{ hostvars['localhost']['k3s_token'] }}"
+        k3s_server_url: "{{ hostvars['localhost']['k3s_server_url'] }}"
+      # The important change: set these facts on the worker nodes (k3s_agents)
+      # by delegating the fact setting to the loop, which uses the group as the iteration target.
+      delegate_to: "{{ item }}"
+      with_items: "{{ groups['k3s_agents'] }}"
 
 - name: 3. Setup K3s Agent Nodes
   hosts: k3s_agents
