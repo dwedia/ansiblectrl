@@ -20,7 +20,7 @@
       set_fact:
         k3s_token: "{{ k3s_token_file.content | b64decode | trim }}"
         # Use the inventory IP for the agent's K3S_URL
-        k3s_server_url: "https://{{ hostvars[inventory_hostname]['ansible_host'] }}:6443"
+        k3s_server_url: "https://{{ hostvars[inventory_hostname]['ansible_host'] | default(inventory_hostname) }}:6443"
       delegate_to: localhost
 
     - name: Display K3s token and server URL (optional)
