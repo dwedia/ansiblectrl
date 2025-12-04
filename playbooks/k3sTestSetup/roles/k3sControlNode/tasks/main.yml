@@ -1,5 +1,13 @@
 ---
 # This role installs K3s as a server node.
+- name: Install the k3s-selinux package
+  ansible.builtin.dnf:
+    name: k3s-selinux
+    state: present
+    update_cache: true
+  when:
+    - ansible_facts['os_family'] == "RedHat"
+
 - name: Download k3s binary
   ansible.builtin.get_url:
     url: "https://github.com/k3s-io/k3s/releases/download/{{ k3s_version }}/k3s"
