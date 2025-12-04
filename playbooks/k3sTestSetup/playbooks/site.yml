@@ -6,38 +6,34 @@
     - firewallSetupControlNodes
     - k3sControlNode
 
-- name: 2. Get K3s Join Token and Server IP
-  hosts: k3s_servers[0] # Target only the first server to get the token
+- name: 2. Get K3s Join Token and Server IP and set Group Vars
+  hosts: k3s_servers[0] # Target only the first server (kubetest01)
   become: true
   gather_facts: false
   tasks:
     - name: Get K3s token from server
-      slurp:
+      ansible.builtin.slurp:
         src: /var/lib/rancher/k3s/server/node-token
       register: k3s_token_file
+      # k3s_token_file.content is now available, but it's base64 encoded
 
-    - name: Set fact for k3s token and URL
-      set_fact:
-        k3s_token: "{{ k3s_token_file.content | b64decode | trim }}"
-        # Use the inventory IP for the agent's K3S_URL
-        k3s_server_url: "https://{{ hostvars[inventory_hostname]['ansible_host'] | default(inventory_hostname) }}:6443"
-      delegate_to: localhost
-
-    - name: Display K3s token and server URL (optional)
-      debug:
-        msg: "Token: {{ k3s_token }}, Server URL: {{ k3s_server_url }}"
-      delegate_to: localhost
-    
-    - name: Set variables for the k3s_agents group (accessible in Play 3)
+    - name: Set K3s variables for the worker nodes
       ansible.builtin.add_host:
         name: "{{ item }}"
-        k3s_token: "{{ k3s_token_temp }}"
-        k3s_server_url: "{{ k3s_server_url_temp }}"
-      # 'add_host' here is used to dynamically set host/group variables for the current run.
-      delegate_to: localhost # Run this on the control node
-      run_once: true         # Ensure it only runs once, regardless of the host count
+        # Define k3s_token by decoding the slurp output directly
+        k3s_token: "{{ k3s_token_file.content | b64decode | trim }}"
+        # Define k3s_server_url using the hostvars entry directly
+        k3s_server_url: "https://{{ hostvars[inventory_hostname]['ansible_host'] }}:6443"
+      delegate_to: localhost
+      run_once: true
       with_items: "{{ groups['k3s_agents'] }}"
       # Now, k3s_token and k3s_server_url are defined in hostvars for every worker.
+
+    - name: Display K3s token and server URL (optional)
+      ansible.builtin.debug:
+        msg: "Token: {{ k3s_token_file.content | b64decode | trim }}, Server URL: https://{{ hostvars[inventory_hostname]['ansible_host'] }}:6443"
+      delegate_to: localhost
+      run_once: true
 
 - name: 3. Setup K3s Agent Nodes
   hosts: k3s_agents
