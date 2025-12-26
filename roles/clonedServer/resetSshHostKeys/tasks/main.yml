@@ -1,0 +1,16 @@
+---
+- name: Copy regenerate ssh host keys service file
+  ansible.builtin.copy:
+    src: regenerate_ssh_host_keys.service
+    dest: /etc/systemd/system
+    user: root
+    group: root
+
+- name: Force Systemd daemon reload
+  ansible.builtin.systemd_service:
+    daemon_reload: true
+
+- name: Enable ssh key regen service
+  ansible.builtin.systemd_service:
+    name: regenerate_ssh_host_keys.service
+    enabled: true
