@@ -3,7 +3,7 @@
   ansible.builtin.copy:
     src: regenerate_ssh_host_keys.service
     dest: /etc/systemd/system
-    user: root
+    owner: root
     group: root
 
 - name: Force Systemd daemon reload
