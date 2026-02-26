@@ -1,5 +1,9 @@
 #### [REDHAT] Check if reboot is needed ####
 ---
+- name: "[REDHAT] Check if yum-utils is installed"
+  ansible.builtin.package_facts:
+    manager: auto
+
 - name: "[REDHAT] Check if needs-restarting is installed"
   stat:
     path: /usr/bin/needs-restarting
@@ -10,7 +14,7 @@
   ansible.builtin.dnf:
     name: yum-utils
     state: present
-  when: when redHatNeedsRestartingInstalled == 1
+  when: yum-utils not in {{ ansible_facts.packages }}
 
 - name: "[REDHAT] run needs-restarting"
   shell: sudo needs-restarting -r
