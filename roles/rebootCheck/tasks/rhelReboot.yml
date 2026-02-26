@@ -6,6 +6,12 @@
   register: redHatNeedsRestartingInstalled
   when: ansible_facts['os_family'] == "RedHat"
 
+- name: "[REDHAT] Install yum-utils"
+  ansible.builtin.dnf:
+    name: yum-utils
+    state: present
+  when: when redHatNeedsRestartingInstalled == 1
+
 - name: "[REDHAT] run needs-restarting"
   shell: sudo needs-restarting -r
   register: redHatNeedsRestartingStatus
