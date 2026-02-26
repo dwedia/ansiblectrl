@@ -2,9 +2,6 @@
 ---
 - name: reboot checks
   hosts: all
+  become: true
   roles:
-    - role: debianRebootCheck
-      when: ansible_facts['os_family'] == "Debian"
-    - role: redhatRebootCheck
-      become: true
-      when: ansible_facts['os_family'] == "RedHat"
+    - rebootCheck
