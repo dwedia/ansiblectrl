@@ -4,22 +4,18 @@
   ansible.builtin.package_facts:
     manager: auto
 
-- name: "[REDHAT] Check if needs-restarting is installed"
-  stat:
-    path: /usr/bin/needs-restarting
-  register: redHatNeedsRestartingInstalled
-  when: ansible_facts['os_family'] == "RedHat"
-
 - name: "[REDHAT] Install yum-utils"
   ansible.builtin.dnf:
     name: yum-utils
     state: present
   when: "'yum-utils' not in ansible_facts.packages"
+  register: yumUtilsInstalled
 
 - name: "[REDHAT] run needs-restarting"
   shell: sudo needs-restarting -r
   register: redHatNeedsRestartingStatus
-  when: redHatNeedsRestartingInstalled.stat.exists
+  when:
+    - ( "'yum-utils' not ansible_facts.packages" ) or ( yumUtilsInstalled is defined )
   failed_when: "redHatNeedsRestartingStatus.rc not in [0, 1]"
   changed_when: false
 
