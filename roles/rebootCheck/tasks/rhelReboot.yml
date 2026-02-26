@@ -14,7 +14,7 @@
   ansible.builtin.dnf:
     name: yum-utils
     state: present
-  when: "'yum-utils' not in {{ ansible_facts.packages }}"
+  when: "'yum-utils' not in ansible_facts.packages"
 
 - name: "[REDHAT] run needs-restarting"
   shell: sudo needs-restarting -r
