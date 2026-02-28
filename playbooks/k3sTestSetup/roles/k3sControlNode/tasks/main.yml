@@ -1,5 +1,13 @@
 ---
 # This role installs K3s as a server node.
+- name: add the rancher-k3s-common repo
+  ansible.builtin.copy:
+    src: rancher-k3s-common.repo
+    dest: /etc/yum.repos.d/rancher-k3s-common.repo
+    owner: root
+    group: root
+    mode: "0644"
+
 - name: Install the k3s-selinux package
   ansible.builtin.dnf:
     name: k3s-selinux
