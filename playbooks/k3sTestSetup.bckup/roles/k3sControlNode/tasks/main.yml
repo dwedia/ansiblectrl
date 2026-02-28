@@ -12,7 +12,7 @@
   ansible.builtin.get_url:
     url: "https://github.com/k3s-io/k3s/releases/download/{{ k3s_version }}/k3s"
     dest: /usr/local/bin/k3s
-    mode: "0755"
+    mode: '0755'
     owner: root
     group: root
   register: k3s_binary_download
@@ -31,22 +31,16 @@
   ansible.builtin.file:
     path: /etc/rancher/k3s
     state: directory
-    mode: "0755"
+    mode: '0755'
     owner: root
     group: root
 
-- name: Create systemd service file and env file
-  ansible.builtin.template:
-    src: "{{ item.src }}"
-    dest: "{{ item.dest }}"
-    owner: root
-    group: root
-    mode: "0755"
-  loop:
-    - src: k3s.service
-      dest: /etc/systemd/system/k3s.service
-    - src: k3s.service.env
-      dest: /etc/systemd/system/k3s.service.env
+- name: Install K3s server using the binary and arguments (mimicking the script's core action)
+  ansible.builtin.command:
+    cmd: /usr/local/bin/k3s server
+    creates: /etc/systemd/system/k3s.service
+  # The 'creates' ensures this only runs on a fresh install, like the script would.
+  # This command generates the service file, fetches dependencies, and starts k3s.
 
 - name: Enable and Start K3s Service
   systemd:
@@ -60,14 +54,3 @@
     path: /var/lib/rancher/k3s/server/node-token
     timeout: 300
     msg: "K3s server token did not appear within 300 seconds."
-
-- name: Read node-token from server
-  ansible.builtin.slurp:
-    src: /var/lib/rancher/k3s/server/node-token
-  register: serverTokenBase64
-
-- name: Store node-token as a fact
-  ansible.builtin.set_fact:
-    k3sToken: "{{ serverTokenBase64.content | b64decode | trim }}"
-  delegate_to: localhost
-  run_once: true

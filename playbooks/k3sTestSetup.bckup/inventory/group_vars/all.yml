@@ -2,4 +2,3 @@ ansible_user: ansibleuser
 ansible_become: true
 ansible_become_method: sudo
 k3s_version: v1.28.8+k3s1
-k3s_server_ip: 10.0.0.219

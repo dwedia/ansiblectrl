@@ -6,7 +6,7 @@
     dest: /etc/yum.repos.d/rancher-k3s-common.repo
     owner: root
     group: root
-    mode: "0644"
+    mode: '0644'
 
 - name: Install the k3s-selinux package
   ansible.builtin.dnf:
@@ -20,7 +20,7 @@
   ansible.builtin.get_url:
     url: "https://github.com/k3s-io/k3s/releases/download/{{ k3s_version }}/k3s"
     dest: /usr/local/bin/k3s
-    mode: "0755"
+    mode: '0755'
     owner: root
     group: root
   when: not (ansible_check_mode is defined and ansible_check_mode)
@@ -29,32 +29,19 @@
   ansible.builtin.file:
     path: /etc/rancher/k3s
     state: directory
-    mode: "0755"
+    mode: '0755'
     owner: root
     group: root
 
-- name: Create symlinks for k3s utilities
-  ansible.builtin.file:
-    src: /usr/local/bin/k3s
-    dest: "/usr/local/bin/{{ item }}"
-    state: link
-  loop:
-    - kubectl
-    - crictl
-    - ctr
-
-- name: Create systemd service file and env file
-  ansible.builtin.template:
-    src: "{{ item.src }}"
-    dest: "{{ item.dest }}"
-    owner: root
-    group: root
-    mode: "0755"
-  loop:
-    - src: k3s-agent.service
-      dest: /etc/systemd/system/k3s-agent.service
-    - src: k3s-agent.service.env
-      dest: /etc/systemd/system/k3s-agent.service.env
+- name: Install K3s agent using the binary and environment variables (mimicking the script's core action)
+  ansible.builtin.command:
+    cmd: /usr/local/bin/k3s agent --selinux
+    creates: /etc/systemd/system/k3s-agent.service
+  environment:
+    K3S_URL: "{{ k3s_server_url }}"
+    K3S_TOKEN: "{{ k3s_token }}"
+  # The 'creates' ensures this only runs on a fresh install, like the script would.
+  # This command generates the agent service file, fetches dependencies, and starts k3s-agent.
 
 - name: Enable and Start K3s Agent Service
   systemd:

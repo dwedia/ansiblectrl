@@ -1,0 +1,41 @@
+---
+- name: Check if UFW is installed
+  ansible.builtin.stat:
+    path: /usr/sbin/ufw
+  register: ufwInstalled
+
+- name: Check if ufw is enabled
+  ansible.builtin.command:
+    cmd: ufw status
+  register: ufwStatus
+  when: ufwInstalled.stat.exists
+  changed_when: false
+  failed_when: false
+
+- name: Open Firewall ports needed for K3s  node communication
+  community.general.ufw:
+    rule: 'allow'
+    port: "{{ item.port }}"
+    proto: "{{ item.proto }}"
+  loop:
+    - port: 22 # ssh port
+      proto: tcp
+    - port: 6443 # Kubernetes API Port
+      proto: tcp
+    - port: 8472 # Flannel VXLAN
+      proto: udp
+    - port: '2379-2380' # ETCD port for HA Clusters
+      proto: tcp
+    - port: '30000-32767' # Nodeport ranges
+      proto: tcp
+    - port: 10250 # Kubelet Metrics
+      proto: tcp
+  when:
+    - "'Status: active' in (ufwStatus.stdout | default(''))"
+    - ufwInstalled.stat.exists
+  notify: Restart UFW
+
+
+
+
+
