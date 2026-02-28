@@ -35,3 +35,8 @@
     - firewalldInstalled.stat.exists
     - firewalldStatus.stdout.strip() == "active"
   notify: Reload Firewalld service
+
+- name: Reload Firewalld service
+  ansible.builtin.service:
+    name: firewalld
+    state: reloaded
