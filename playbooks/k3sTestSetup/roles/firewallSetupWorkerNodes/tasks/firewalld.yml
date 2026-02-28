@@ -12,7 +12,7 @@
   changed_when: false
   failed_when: false
 
-- name: Open firewall ports needed for Docker Swarm node communication
+- name: Open firewall ports needed for Kubernetes node communication
   ansible.posix.firewalld:
     port: "{{ item.port }}/{{ item.proto }}"
     permanent: true
@@ -27,10 +27,9 @@
       proto: udp
     - port: 10250 # Kubelet Metrics
       proto: tcp
-    - port: '30000-32767' # Nodeport ranges
+    - port: "30000-32767" # Nodeport ranges
       proto: tcp
   when:
     - firewalldInstalled.stat.exists
     - firewalldStatus.stdout.strip() == "active"
   notify: Reload Firewalld service
-      
