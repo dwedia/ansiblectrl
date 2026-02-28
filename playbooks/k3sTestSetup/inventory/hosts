@@ -1,12 +1,13 @@
 [k3s_servers]
 #k3s-master-01 ansible_host=YOUR_MASTER_IP
-kubetest01.dragonflight.dk
+k3scontroltest.dragonflight.dk ansible_host=10.0.0.235
 
 [k3s_agents]
 #k3s-worker-01 ansible_host=YOUR_WORKER_01_IP
 #k3s-worker-02 ansible_host=YOUR_WORKER_02_IP
-kubetest02.dragonflight.dk
-kubetest03.dragonflight.dk
+k3sworkertest1.dragonflight.dk ansible_host=10.0.0.236
+k3sworkertest1.dragonflight.dk ansible_host=10.0.0.237
+k3sworkertest1.dragonflight.dk ansible_host=10.0.0.238
 
 
 [k3s_cluster:children]
