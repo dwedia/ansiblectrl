@@ -1,2 +1,3 @@
-# ansiblectrl
-Ansible Controller repo
+# THIS REPO HAS MOVED TO CODEBERG
+
+URL: https://codeberg.org/dragonflight/ansiblectrl
